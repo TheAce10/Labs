@@ -32,9 +32,9 @@ int main(int argc, char* argv[]) {
     char marker;
 
     int i = 0; // Counter for tracking memory accesses
-    for (int i = 0; i < argc; i++) {
-        std::cout << "Argument " << i << ": " << argv[i] << std::endl;
-    }
+    // for (int i = 0; i < argc; i++) {
+    //     std::cout << "Argument " << i << ": " << argv[i] << std::endl;
+    // }
     // Process command-line arguments
     for (int j = 1; j < argc; ++j) {
         if (strcmp("-a", argv[j]) == 0) {
@@ -118,7 +118,7 @@ int main(int argc, char* argv[]) {
    
    
 //    Command to run
-   //7z x -so art.trace.7z | cacheSim -s 64 -a 2 -l 32 -mp 30
+   //7z x -so art.trace.gz | cacheSim -s 64 -a 2 -l 32 -mp 30
 
     return 0;
 }
