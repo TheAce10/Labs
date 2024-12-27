@@ -4,8 +4,11 @@
 #include <cstring>  // For strcmp
 #include <cmath>    // For mathematical operations
 #include <vector>
+#include "cache.h"
 
-// Global variables for cache configuration
+// 7z x -so art.trace.gz | cache0 -s 16 -a 1 -l 16 -mp 30
+
+// Global variables for default cache configuration
 int associativity = 2;          // Associativity of cache
 int blocksize_bytes = 32;       // Cache block size in bytes
 int cachesize_kb = 64;          // Cache size in KB
@@ -22,32 +25,40 @@ void print_usage() {
     exit(0);
 }
 
+
 int main(int argc, char* argv[]) {
     long address;
     int loadstore, icount;
     char marker;
 
     int i = 0; // Counter for tracking memory accesses
-
+    for (int i = 0; i < argc; i++) {
+        std::cout << "Argument " << i << ": " << argv[i] << std::endl;
+    }
     // Process command-line arguments
     for (int j = 1; j < argc; ++j) {
         if (strcmp("-a", argv[j]) == 0) {
             ++j;
             if (j >= argc) print_usage();
             associativity = std::atoi(argv[j]);
-        } else if (strcmp("-l", argv[j]) == 0) {
+        } 
+        else if (strcmp("-l", argv[j]) == 0) {
             ++j;
             if (j >= argc) print_usage();
             blocksize_bytes = std::atoi(argv[j]);
-        } else if (strcmp("-s", argv[j]) == 0) {
+            std::cout<<"argument  "<<argv[j]<<std::endl;
+        } 
+        else if (strcmp("-s", argv[j]) == 0) {
             ++j;
             if (j >= argc) print_usage();
             cachesize_kb = std::atoi(argv[j]);
-        } else if (strcmp("-mp", argv[j]) == 0) {
+        } 
+        else if (strcmp("-mp", argv[j]) == 0) {
             ++j;
             if (j >= argc) print_usage();
             miss_penalty = std::atoi(argv[j]);
-        } else {
+        } 
+        else {
             print_usage();
         }
     }
@@ -59,25 +70,34 @@ int main(int argc, char* argv[]) {
     std::cout << "Cache Block Size (bytes)\t" << blocksize_bytes << "\n";
     std::cout << "Miss penalty (cycles)\t\t" << miss_penalty << "\n\n";
 
+
+    //Create Cache memory with specifications
+    Cache cache_mem(associativity, blocksize_bytes, cachesize_kb, miss_penalty);
+    
+
     // Process memory trace input
     while (std::cin >> marker >> loadstore >> std::hex >> address >> std::dec >> icount) {
         // Code to print out just the first 10 addresses. You can modify/remove this part later.
-
-        if (true) {
-            std::cout << "\t" << marker << " " << loadstore << " " << std::hex << address << " " << std::dec << icount << "\n";
-            ++i;
-        }
-        // else {
-        //     break;
-        //     return 1; // Exit after printing first 10 lines
-        // }
-
-        // Here is where you will want to process your memory accesses
+        
+        cache_mem.memory_access(loadstore, address, icount);
+        ++i;
     }
+
+
+    // Statistics
+    long total_instructions;
+    long memory_accesses;
+    int load_hits;
+    int load_misses;
+    int store_hits;
+    int store_misses;
+    int dirty_evictions;
+    long execution_cycles;
 
     // Print summary statistics
     std::cout << "Lines found = " << i << " \n";
     std::cout << "Simulation results:\n";
+    cache_mem.print_statistics();
 
     // Replace the placeholders with actual calculations as you build the simulator
     /*
