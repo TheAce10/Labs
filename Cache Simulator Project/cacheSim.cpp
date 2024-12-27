@@ -115,7 +115,10 @@ int main(int argc, char* argv[]) {
     std::cout << "load_hits " << ? << "\n";
     std::cout << "store_hits " << ? << "\n";
     */
-   //7z x -so art.trace.7z | cache0 -s 64 -a 2 -l 32 -mp 30
+   
+   
+//    Command to run
+   //7z x -so art.trace.7z | cacheSim -s 64 -a 2 -l 32 -mp 30
 
     return 0;
 }
